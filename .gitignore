@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+venv/
+.venv/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.tmp
+# prebuilt/ is committed on purpose: the zip is meant to work with one click

@@ -1,0 +1,19 @@
+# NOTE: written without being run on GitHub. If it fails, the failure is in this file or the build, not in the project history.
+name: build
+on: [push, pull_request]
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y cmake g++ python3-tk xvfb
+      - run: cmake -S layer -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build -j
+      - run: ./build/core_test
+      - run: ./build/fuzz_test
+      - run: D=$(mktemp -d) && ./build/layer_test ./build/libXR_APILAYER_OVALFFR_oval_ffr.so "$D"
+      - run: OVALFFR_BUILD=$PWD/build python3 -m unittest discover -s tests -v
+  windows-dll:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cmake -S layer -B build && cmake --build build --config Release
